@@ -1,0 +1,1 @@
+"""Shared utilities: coordinate scaling and the Qwen processor."""

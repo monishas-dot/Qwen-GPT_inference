@@ -1,0 +1,27 @@
+{
+  "qwen": {
+    "excluded_missing_id": [],
+    "excluded_extra_id_not_in_gt": [
+      "RE9DVVBSRC0xNTE4NTE1MzIwMjYwODA1VDEyNDYwMC4xMzUgR01U_page03",
+      "RE9DVVBSRC0xNTE4NTE1MzIwMjYwODA1VDEyNDYwMC4xMzUgR01U_page05",
+      "RE9DVVBSRC0xNTI4NjkzODIwMjYwODA1VDE5MjI1Ni43MDYgR01U_page04"
+    ],
+    "excluded_bad_status": [
+      "RE9DVVBSRC0xNTE5OTUwMjIwMjYwODA1VDE0MDMwNy43OTYgR01U_page02",
+      "RE9DVVBSRC0xNTI0Mzg2MzIwMjYwODA1VDE2NTIzMC45NDAgR01U_page02",
+      "RE9DVVBSRC0xNTI3NzA5MDIwMjYwODA1VDE4NTAwNi4yMjcgR01U_page01",
+      "RE9DVVBSRC0xNTM2NzI0NTIwMjYwODA2VDEzNTA1NC45MDggR01U_page03"
+    ],
+    "missing_severity_field_instances": []
+  },
+  "gpt": {
+    "excluded_missing_id": [],
+    "excluded_extra_id_not_in_gt": [
+      "RE9DVVBSRC0xNTE4NTE1MzIwMjYwODA1VDEyNDYwMC4xMzUgR01U_page03",
+      "RE9DVVBSRC0xNTE4NTE1MzIwMjYwODA1VDEyNDYwMC4xMzUgR01U_page05",
+      "RE9DVVBSRC0xNTI4NjkzODIwMjYwODA1VDE5MjI1Ni43MDYgR01U_page04"
+    ],
+    "excluded_bad_status": [],
+    "missing_severity_field_instances": []
+  }
+}

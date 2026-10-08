@@ -1,0 +1,27 @@
+{
+  "split": "predict",
+  "n_total": 132,
+  "n_errors": 4,
+  "doc_exact_match_rate": null,
+  "per_field_accuracy": {
+    "diagnoses": null,
+    "procedures": null,
+    "servicing_provider_npi": null,
+    "type_of_service": null,
+    "member_id": null,
+    "requesting_provider_phone": null,
+    "acuity": null,
+    "date_of_birth": null,
+    "servicing_provider_name": null,
+    "requesting_provider_name": null,
+    "member_name": null,
+    "place_of_service": null,
+    "requesting_provider_npi": null,
+    "requesting_provider_fax": null,
+    "lob": null,
+    "servicing_provider_fax": null,
+    "servicing_provider_phone": null,
+    "servicing_provider_address": null,
+    "requesting_provider_address": null
+  }
+}

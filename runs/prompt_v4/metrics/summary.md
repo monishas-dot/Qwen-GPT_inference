@@ -1,0 +1,198 @@
+# Extraction Metrics Report
+
+## Ground Truth Overview
+
+| Metric | Value |
+|---|---|
+| Total annotated files (GT) | 129 |
+| Top-level fields (schema) | 19 |
+| Scoring keys per file (sub-fields expanded) | 22 |
+| Total (file x top-level field) instances | 2451 |
+| Total (file x scoring key) instances | 2838 |
+
+### Field-instance counts by GT severity (all top-level fields pooled)
+
+| Severity | Count |
+|---|---|
+| none | 1331 |
+| low | 744 |
+| medium | 275 |
+| high | 101 |
+
+## Model: Qwen
+
+| Metric | Value |
+|---|---|
+| Files scored | 113 |
+| Excluded (id missing in file) | 0 |
+| Excluded (id not in GT) | 3 |
+| Excluded (bad status/errors) | 16 |
+| Field instances w/ no GT severity (skipped) | 0 |
+
+### Overall accuracy, all fields pooled, by severity
+
+| Severity | n | Strict correct | Strict % | Weighted % |
+|---|---|---|---|---|
+| none | 1274 | 796 | 62.5% | 62.7% |
+| low | 854 | 328 | 38.4% | 39.9% |
+| medium | 294 | 87 | 29.6% | 30.9% |
+
+### Per-field accuracy by severity
+
+| Field | Severity | n | Strict correct | Strict % | Weighted % |
+|---|---|---|---|---|---|
+| acuity | none | 73 | 52 | 71.2% | 71.2% |
+| acuity | low | 28 | 22 | 78.6% | 78.6% |
+| acuity | medium | 12 | 4 | 33.3% | 33.3% |
+| date_of_birth | none | 71 | 51 | 71.8% | 71.8% |
+| date_of_birth | low | 34 | 15 | 44.1% | 44.1% |
+| date_of_birth | medium | 8 | 5 | 62.5% | 62.5% |
+| diagnoses.diagnosisCode | none | 51 | 22 | 43.1% | 43.1% |
+| diagnoses.diagnosisCode | low | 45 | 14 | 31.1% | 32.2% |
+| diagnoses.diagnosisCode | medium | 10 | 1 | 10.0% | 15.0% |
+| lob | none | 85 | 45 | 52.9% | 52.9% |
+| lob | low | 24 | 6 | 25.0% | 25.0% |
+| lob | medium | 4 | 1 | 25.0% | 25.0% |
+| member_id | none | 67 | 46 | 68.7% | 68.7% |
+| member_id | low | 32 | 10 | 31.2% | 31.2% |
+| member_id | medium | 13 | 1 | 7.7% | 7.7% |
+| member_name | none | 54 | 45 | 83.3% | 83.3% |
+| member_name | low | 37 | 28 | 75.7% | 75.7% |
+| member_name | medium | 16 | 6 | 37.5% | 37.5% |
+| place_of_service | none | 88 | 49 | 55.7% | 55.7% |
+| place_of_service | low | 19 | 13 | 68.4% | 68.4% |
+| place_of_service | medium | 6 | 1 | 16.7% | 16.7% |
+| procedures.dateOfServiceEnd | none | 30 | 14 | 46.7% | 49.2% |
+| procedures.dateOfServiceEnd | low | 62 | 15 | 24.2% | 27.3% |
+| procedures.dateOfServiceEnd | medium | 17 | 4 | 23.5% | 24.5% |
+| procedures.dateOfServiceStart | none | 30 | 13 | 43.3% | 46.4% |
+| procedures.dateOfServiceStart | low | 62 | 22 | 35.5% | 40.6% |
+| procedures.dateOfServiceStart | medium | 17 | 5 | 29.4% | 32.4% |
+| procedures.numberOfVisits | none | 30 | 19 | 63.3% | 66.7% |
+| procedures.numberOfVisits | low | 62 | 41 | 66.1% | 71.7% |
+| procedures.numberOfVisits | medium | 17 | 6 | 35.3% | 46.1% |
+| procedures.procedureCode | none | 30 | 21 | 70.0% | 72.2% |
+| procedures.procedureCode | low | 62 | 23 | 37.1% | 42.7% |
+| procedures.procedureCode | medium | 17 | 3 | 17.6% | 23.0% |
+| requesting_provider_address | none | 77 | 53 | 68.8% | 68.8% |
+| requesting_provider_address | low | 22 | 6 | 27.3% | 27.3% |
+| requesting_provider_address | medium | 10 | 4 | 40.0% | 40.0% |
+| requesting_provider_fax | none | 54 | 33 | 61.1% | 61.1% |
+| requesting_provider_fax | low | 41 | 7 | 17.1% | 17.1% |
+| requesting_provider_fax | medium | 15 | 1 | 6.7% | 6.7% |
+| requesting_provider_name | none | 51 | 42 | 82.4% | 82.4% |
+| requesting_provider_name | low | 38 | 18 | 47.4% | 47.4% |
+| requesting_provider_name | medium | 18 | 7 | 38.9% | 38.9% |
+| requesting_provider_npi | none | 58 | 33 | 56.9% | 56.9% |
+| requesting_provider_npi | low | 38 | 8 | 21.1% | 21.1% |
+| requesting_provider_npi | medium | 15 | 3 | 20.0% | 20.0% |
+| requesting_provider_phone | none | 48 | 31 | 64.6% | 64.6% |
+| requesting_provider_phone | low | 44 | 13 | 29.5% | 29.5% |
+| requesting_provider_phone | medium | 18 | 4 | 22.2% | 22.2% |
+| servicing_provider_address | none | 62 | 43 | 69.4% | 69.4% |
+| servicing_provider_address | low | 31 | 8 | 25.8% | 25.8% |
+| servicing_provider_address | medium | 16 | 3 | 18.8% | 18.8% |
+| servicing_provider_fax | none | 68 | 50 | 73.5% | 73.5% |
+| servicing_provider_fax | low | 32 | 7 | 21.9% | 21.9% |
+| servicing_provider_fax | medium | 10 | 5 | 50.0% | 50.0% |
+| servicing_provider_name | none | 56 | 41 | 73.2% | 73.2% |
+| servicing_provider_name | low | 38 | 22 | 57.9% | 57.9% |
+| servicing_provider_name | medium | 14 | 8 | 57.1% | 57.1% |
+| servicing_provider_npi | none | 58 | 28 | 48.3% | 48.3% |
+| servicing_provider_npi | low | 38 | 8 | 21.1% | 21.1% |
+| servicing_provider_npi | medium | 17 | 3 | 17.6% | 17.6% |
+| servicing_provider_phone | none | 66 | 39 | 59.1% | 59.1% |
+| servicing_provider_phone | low | 32 | 10 | 31.2% | 31.2% |
+| servicing_provider_phone | medium | 13 | 8 | 61.5% | 61.5% |
+| type_of_service | none | 67 | 26 | 38.8% | 38.8% |
+| type_of_service | low | 33 | 12 | 36.4% | 36.4% |
+| type_of_service | medium | 11 | 4 | 36.4% | 36.4% |
+
+## Model: GPT
+
+| Metric | Value |
+|---|---|
+| Files scored | 129 |
+| Excluded (id missing in file) | 0 |
+| Excluded (id not in GT) | 3 |
+| Excluded (bad status/errors) | 0 |
+| Field instances w/ no GT severity (skipped) | 0 |
+
+### Overall accuracy, all fields pooled, by severity
+
+| Severity | n | Strict correct | Strict % | Weighted % |
+|---|---|---|---|---|
+| none | 1436 | 1098 | 76.5% | 76.8% |
+| low | 954 | 555 | 58.2% | 59.7% |
+| medium | 329 | 157 | 47.7% | 49.9% |
+
+### Per-field accuracy by severity
+
+| Field | Severity | n | Strict correct | Strict % | Weighted % |
+|---|---|---|---|---|---|
+| acuity | none | 80 | 65 | 81.2% | 81.2% |
+| acuity | low | 34 | 25 | 73.5% | 73.5% |
+| acuity | medium | 13 | 6 | 46.2% | 46.2% |
+| date_of_birth | none | 77 | 61 | 79.2% | 79.2% |
+| date_of_birth | low | 39 | 20 | 51.3% | 51.3% |
+| date_of_birth | medium | 10 | 4 | 40.0% | 40.0% |
+| diagnoses.diagnosisCode | none | 58 | 46 | 79.3% | 84.5% |
+| diagnoses.diagnosisCode | low | 50 | 32 | 64.0% | 69.7% |
+| diagnoses.diagnosisCode | medium | 11 | 3 | 27.3% | 45.5% |
+| lob | none | 95 | 52 | 54.7% | 54.7% |
+| lob | low | 28 | 20 | 71.4% | 71.4% |
+| lob | medium | 4 | 2 | 50.0% | 50.0% |
+| member_id | none | 74 | 46 | 62.2% | 62.2% |
+| member_id | low | 37 | 11 | 29.7% | 29.7% |
+| member_id | medium | 14 | 6 | 42.9% | 42.9% |
+| member_name | none | 59 | 56 | 94.9% | 94.9% |
+| member_name | low | 42 | 31 | 73.8% | 73.8% |
+| member_name | medium | 19 | 8 | 42.1% | 42.1% |
+| place_of_service | none | 97 | 43 | 44.3% | 44.3% |
+| place_of_service | low | 24 | 1 | 4.2% | 4.2% |
+| place_of_service | medium | 6 | 1 | 16.7% | 16.7% |
+| procedures.dateOfServiceEnd | none | 35 | 31 | 88.6% | 89.3% |
+| procedures.dateOfServiceEnd | low | 70 | 40 | 57.1% | 59.7% |
+| procedures.dateOfServiceEnd | medium | 18 | 10 | 55.6% | 56.5% |
+| procedures.dateOfServiceStart | none | 35 | 29 | 82.9% | 84.5% |
+| procedures.dateOfServiceStart | low | 70 | 44 | 62.9% | 66.2% |
+| procedures.dateOfServiceStart | medium | 18 | 9 | 50.0% | 59.3% |
+| procedures.numberOfVisits | none | 35 | 30 | 85.7% | 85.7% |
+| procedures.numberOfVisits | low | 70 | 55 | 78.6% | 83.0% |
+| procedures.numberOfVisits | medium | 18 | 8 | 44.4% | 56.7% |
+| procedures.procedureCode | none | 35 | 32 | 91.4% | 93.8% |
+| procedures.procedureCode | low | 70 | 46 | 65.7% | 72.3% |
+| procedures.procedureCode | medium | 18 | 11 | 61.1% | 67.8% |
+| requesting_provider_address | none | 87 | 81 | 93.1% | 93.1% |
+| requesting_provider_address | low | 25 | 18 | 72.0% | 72.0% |
+| requesting_provider_address | medium | 11 | 7 | 63.6% | 63.6% |
+| requesting_provider_fax | none | 61 | 48 | 78.7% | 78.7% |
+| requesting_provider_fax | low | 43 | 19 | 44.2% | 44.2% |
+| requesting_provider_fax | medium | 20 | 9 | 45.0% | 45.0% |
+| requesting_provider_name | none | 57 | 52 | 91.2% | 91.2% |
+| requesting_provider_name | low | 43 | 30 | 69.8% | 69.8% |
+| requesting_provider_name | medium | 20 | 12 | 60.0% | 60.0% |
+| requesting_provider_npi | none | 68 | 46 | 67.6% | 67.6% |
+| requesting_provider_npi | low | 39 | 13 | 33.3% | 33.3% |
+| requesting_provider_npi | medium | 18 | 5 | 27.8% | 27.8% |
+| requesting_provider_phone | none | 56 | 39 | 69.6% | 69.6% |
+| requesting_provider_phone | low | 46 | 23 | 50.0% | 50.0% |
+| requesting_provider_phone | medium | 21 | 8 | 38.1% | 38.1% |
+| servicing_provider_address | none | 69 | 63 | 91.3% | 91.3% |
+| servicing_provider_address | low | 35 | 28 | 80.0% | 80.0% |
+| servicing_provider_address | medium | 18 | 10 | 55.6% | 55.6% |
+| servicing_provider_fax | none | 79 | 69 | 87.3% | 87.3% |
+| servicing_provider_fax | low | 34 | 21 | 61.8% | 61.8% |
+| servicing_provider_fax | medium | 11 | 8 | 72.7% | 72.7% |
+| servicing_provider_name | none | 62 | 58 | 93.5% | 93.5% |
+| servicing_provider_name | low | 42 | 28 | 66.7% | 66.7% |
+| servicing_provider_name | medium | 16 | 9 | 56.2% | 56.2% |
+| servicing_provider_npi | none | 66 | 45 | 68.2% | 68.2% |
+| servicing_provider_npi | low | 40 | 12 | 30.0% | 30.0% |
+| servicing_provider_npi | medium | 19 | 4 | 21.1% | 21.1% |
+| servicing_provider_phone | none | 76 | 66 | 86.8% | 86.8% |
+| servicing_provider_phone | low | 35 | 20 | 57.1% | 57.1% |
+| servicing_provider_phone | medium | 14 | 13 | 92.9% | 92.9% |
+| type_of_service | none | 75 | 40 | 53.3% | 53.3% |
+| type_of_service | low | 38 | 18 | 47.4% | 47.4% |
+| type_of_service | medium | 12 | 4 | 33.3% | 33.3% |

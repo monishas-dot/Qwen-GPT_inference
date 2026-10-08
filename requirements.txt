@@ -1,0 +1,18 @@
+# GPT inference + evaluation (versions from the working local env)
+openai>=1.0.0
+httpx==0.28.1
+pydantic==2.13.5
+tenacity==9.1.2
+python-dotenv==1.0.1
+pillow>=10.0.0
+numpy>=2.0.0
+PyYAML==6.0.3
+pymupdf>=1.24.0  # pdf_to_page_images.py only
+tqdm
+
+# Qwen inference (GPU machine; versions not pinned locally)
+torch
+transformers
+peft
+accelerate        # needed for device_map="auto"
+albumentations

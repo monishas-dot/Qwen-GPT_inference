@@ -1,0 +1,38 @@
+{
+  "n_common_records": 128,
+  "n_records_with_any_mismatch": 128,
+  "n_records_perfect_match": 0,
+  "n_only_qwen": 0,
+  "n_only_gpt": 4,
+  "only_qwen_ids": [],
+  "only_gpt_ids": [
+    "RE9DVVBSRC0xNTE5OTUwMjIwMjYwODA1VDE0MDMwNy43OTYgR01U_page02",
+    "RE9DVVBSRC0xNTI0Mzg2MzIwMjYwODA1VDE2NTIzMC45NDAgR01U_page02",
+    "RE9DVVBSRC0xNTI3NzA5MDIwMjYwODA1VDE4NTAwNi4yMjcgR01U_page01",
+    "RE9DVVBSRC0xNTM2NzI0NTIwMjYwODA2VDEzNTA1NC45MDggR01U_page03"
+  ],
+  "scalar_field_agreement_rate": {
+    "servicing_provider_npi": 0.390625,
+    "type_of_service": 0.3203125,
+    "member_id": 0.3828125,
+    "requesting_provider_phone": 0.40625,
+    "acuity": 0.515625,
+    "date_of_birth": 0.5390625,
+    "servicing_provider_name": 0.6484375,
+    "requesting_provider_name": 0.546875,
+    "member_name": 0.7265625,
+    "place_of_service": 0.359375,
+    "requesting_provider_npi": 0.4140625,
+    "requesting_provider_fax": 0.4296875,
+    "lob": 0.421875,
+    "servicing_provider_fax": 0.546875,
+    "servicing_provider_phone": 0.515625,
+    "servicing_provider_address": 0.5703125,
+    "requesting_provider_address": 0.5390625
+  },
+  "list_field_item_level_agreement_rate": {
+    "diagnoses": 0.28125,
+    "procedures": 0.4469618055555556
+  },
+  "overall_scalar_agreement_rate": 0.4866727941176467
+}

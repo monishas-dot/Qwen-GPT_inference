@@ -1,0 +1,223 @@
+# config_extractor_full_page.yaml — Pipeline 1: Full page -> field values (JSON), no cropping.
+
+task_name: "extractor_full_page"
+task_type: "extraction"   # trainer.py branches dataset/metrics selection on this
+
+paths:
+  annotation_results: "data/field_annotation_results_run4.jsonl"   # see prepare_dataset_extraction.py for schema
+  image_dir: "data/SRF_images"
+  prepared_dir: "data/prepared_extraction_run4"
+  train_jsonl: "data/prepared_extraction_run4/train.jsonl"
+  val_jsonl: "data/prepared_extraction_run4/val.jsonl"
+  test_jsonl: "data/prepared_extraction_run4/test.jsonl"
+  output_dir: "out_run4/extraction_checkpoints_1"
+  logs_dir: "out_run4/extraction_logs_1"
+  infer_output_dir: "out_run4/extraction_inference"
+
+training_flags:
+  resume_from_last_checkpoint: false
+
+model:
+  model_id: "Qwen/Qwen2.5-VL-3B-Instruct"
+  torch_dtype: "float16"      # T4 has no native bf16 support
+  device_map: "mps"
+  attn_implementation: "sdpa"
+  load_in_4bit: false   # bitsandbytes 4-bit is CUDA-only
+
+lora:
+  enabled: true
+  r: 16
+  alpha: 32
+  dropout: 0.05
+  bias: "none"
+  target_modules:
+    - "q_proj"
+    - "k_proj"
+    - "v_proj"
+    - "o_proj"
+    - "gate_proj"
+    - "up_proj"
+    - "down_proj"
+
+data:
+  supported_image_extensions: [".png", ".jpg", ".jpeg", ".tiff", ".tif"]
+  val_split: 0.10
+  test_split: 0.10
+  seed: 42
+
+processor:
+  min_pixels: 200704   # 256 * 28 * 28
+  max_pixels: 802816   # 1024 * 28 * 28
+  # Full pages carry more/smaller text than a cropped section did for the detector —
+  # if field accuracy is poor on small text, raise max_pixels first before anything else.
+
+system_prompt: "You are a precise medical document analyzer. You extract structured field values from fax images."
+
+task_description: |
+  You are extracting data from a faxed medical Service Request Form (SRF). The page may be skewed, noisy or low resolution. Read carefully.
+
+  RULES:
+  1. Copy values exactly as printed. Never guess, infer, or complete a partial value.
+  2. If a field is blank, unreadable or absent, use null (or [] for diagnoses/procedures).
+  3. Use only the value next to a field's own label. Do not copy a value from a neighbouring section
+     (e.g. the requesting provider's phone must not be reused as the servicing provider's phone).
+  4. Dates: write MM/DD/YYYY exactly as the form's US month/day order, e.g. 03/16/2026. Expand a 2-digit
+     year to 4 digits. If any part of the date is unreadable, use null. Do NOT use YYYY-MM-DD.
+  5. Codes, NPIs, member IDs: copy the characters printed; spaces are fine to drop. An NPI has exactly
+     10 digits; if you cannot read all 10, use null.
+  6. Phone and fax are different fields: read the label ("Phone"/"Tel" vs "Fax") before assigning.
+  7. Checkbox fields: return the label of the marked box copied verbatim; if none is marked, use null.
+  8. numberOfVisits is a whole number (e.g. 12), not text.
+  9. Lists: one object per row actually printed, in page order. Do not merge rows and do not invent rows.
+
+  FIELD GUIDE:
+  - member_name, member_id, date_of_birth: patient/member section.
+  - requesting_provider_*: the ordering/referring provider (labels like Requesting, Referring, Ordering).
+  - servicing_provider_*: the provider or facility that will perform the service (Servicing, Rendering, Facility).
+  - acuity: the checkbox label that is marked, copied exactly as printed (e.g. Elective/Routine, Non-Urgent/Routine/Elective, Expedited/Urgent, Urgent, Concurrent). Do NOT shorten or reword it (not just Routine). If no box is clearly marked, or the options are only listed with nothing checked, use null.
+  - lob: fill only if the form has a labelled Line of Business / LOB / plan-type / program field or checkbox. Give the program as printed there (e.g. Medicaid, Molina Medicaid, Medicare, Marketplace, Duals). Do NOT infer it from the letterhead, logo, state, or health-plan name (not Kentucky Medicaid MCO, not Passport Health Plan). If there is no such field, use null.
+  - type_of_service: the service category marked or listed for the request (e.g. Diagnostic Procedure, Imaging/Special Tests, OT/PT/ST, Physical Therapy, Occupational Therapy, Speech Therapy, DME, Behavioral Health, Outpatient Surgical/Procedures, Partial Hospitalization Program). Outpatient or Inpatient on their own are NOT a type of service; they belong in place_of_service. If no category is marked, use null.
+  - place_of_service: the care setting: Outpatient, Inpatient, Home, or Provider Office, as marked or stated on the form (a checkbox, a Place of Service field, or the form heading such as Outpatient Prior Authorization). Prefer the printed word (Outpatient) over a numeric code. If no setting is stated anywhere, use null.
+  - diagnoses: every ICD-10 code listed (diagnosisCode).
+  - procedures: one entry per procedure row: procedureCode (CPT/HCPCS), dateOfServiceStart,
+    dateOfServiceEnd, numberOfVisits (visits/units requested).
+
+fields:
+  - name: "diagnoses"
+    hint: "list of {diagnosisCode}; ICD-10 codes, one per code printed"
+    required: false
+    field_type: "list"
+    item_schema:
+      - name: "diagnosisCode"
+        match_type: "code"
+  - name: "procedures"
+    hint: "list of {procedureCode, dateOfServiceStart, dateOfServiceEnd, numberOfVisits}; one per row"
+    required: false
+    field_type: "list"
+    item_schema:
+      - name: "procedureCode"
+        match_type: "code"
+      - name: "dateOfServiceStart"
+        match_type: "date"
+      - name: "dateOfServiceEnd"
+        match_type: "date"
+      - name: "numberOfVisits"
+        match_type: "numeric"
+  - name: "servicing_provider_npi"
+    hint: "10-digit NPI of the servicing/rendering provider"
+    required: false
+    match_type: "code"
+  - name: "type_of_service"
+    hint: "service category, e.g. Diagnostic Procedure, OT/PT/ST, DME. Never Outpatient or Inpatient"
+    required: false
+    match_type: "fuzzy_text"
+  - name: "member_id"
+    hint: "member/subscriber ID as printed"
+    required: false
+    match_type: "code"
+  - name: "requesting_provider_phone"
+    hint: "phone (not fax) of the requesting provider"
+    required: false
+    match_type: "phone"
+  - name: "acuity"
+    hint: "marked checkbox label copied exactly, e.g. Elective/Routine, Expedited/Urgent; null if none marked"
+    required: false
+    match_type: "exact"
+  - name: "date_of_birth"
+    hint: "member date of birth, MM/DD/YYYY"
+    required: false
+    match_type: "date"
+  - name: "servicing_provider_name"
+    hint: "name of servicing/rendering provider or facility"
+    required: false
+    match_type: "fuzzy_text"
+  - name: "requesting_provider_name"
+    hint: "name of ordering/referring provider"
+    required: false
+    match_type: "fuzzy_text"
+  - name: "member_name"
+    hint: "patient/member full name"
+    required: false
+    match_type: "fuzzy_text"
+  - name: "place_of_service"
+    hint: "setting: Outpatient, Inpatient, Home or Provider Office"
+    required: false
+    match_type: "fuzzy_text"
+  - name: "requesting_provider_npi"
+    hint: "10-digit NPI of the requesting provider"
+    required: false
+    match_type: "code"
+  - name: "requesting_provider_fax"
+    hint: "fax (not phone) of the requesting provider"
+    required: false
+    match_type: "phone"
+  - name: "lob"
+    hint: "program from a labelled LOB field, e.g. Medicaid, Medicare, Marketplace; null if no such field"
+    required: false
+    match_type: "fuzzy_text"
+  - name: "servicing_provider_fax"
+    hint: "fax (not phone) of the servicing provider"
+    required: false
+    match_type: "phone"
+  - name: "servicing_provider_phone"
+    hint: "phone (not fax) of the servicing provider"
+    required: false
+    match_type: "phone"
+  - name: "servicing_provider_address"
+    hint: "full address of the servicing provider"
+    required: false
+    match_type: "fuzzy_text"
+  - name: "requesting_provider_address"
+    hint: "full address of the requesting provider"
+    required: false
+    match_type: "fuzzy_text"
+# Photometric-only augmentation chain (see src/preprocessing/preprocessing.py).
+# No bbox-synced resize here since there's no bbox — just a plain resize to target_size.
+augmentation:
+  brightness_contrast:
+    enabled: true
+    brightness_limit: 0.2
+    contrast_limit: 0.2
+    p: 0.5
+  sharpen:
+    enabled: true
+    alpha: [0.2, 0.5]
+    lightness: [0.8, 1.2]
+    p: 0.3
+  noise:
+    enabled: true
+    var_limit: [10.0, 50.0]
+    p: 0.3
+  blur:
+    enabled: true
+    blur_limit: 3
+    p: 0.2
+
+training:
+  num_epochs: 20
+  per_device_train_batch_size: 1
+  per_device_eval_batch_size: 1
+  gradient_accumulation_steps: 8
+  dataloader_num_workers: 4
+  dataloader_pin_memory: false
+  dataloader_prefetch_factor: 2
+  learning_rate: 1.0e-4
+  warmup_steps: 0.03
+  lr_scheduler_type: "linear"
+  weight_decay: 0.01
+  max_grad_norm: 1.0
+  fp16: true
+  bf16: false
+  eval_strategy: "epoch"
+  eval_steps: null
+  save_strategy: "epoch"
+  save_steps: null
+  logging_steps: 10
+  metric_for_best_model: "field_accuracy"
+  greater_is_better: true
+  early_stopping_patience: 3
+  report_to: "tensorboard"
+
+inference:
+  max_new_tokens: 4096   # a multi-field JSON payload is bigger than a 4-int bbox
+  device: "mps"
